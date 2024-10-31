@@ -5,8 +5,12 @@ A heuristic approach using a combination of gaussian mixture models and existing
 Advantages:
 
 No need to assume underlying signal (cf. needing to choose mother wavelet in wavelet transform).
+
 Adjustable robustness against noise.
+
 Avoids spurious power at large scales when the structures are actually narrow (cf. FFT methods, where, for example, the FFT of a gaussian pulse gives another gaussian in wavenumber space, where the width in the wavenumber domain is inversely related to the width in the spatial domain; the highest power is still at large scales, even though the structure is narrow).
+
+Usage:
 
 The main function is aurora_power. It works best on discrete and bright emissions, but results will be reasonable in other cases.
 
