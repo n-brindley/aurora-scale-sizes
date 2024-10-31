@@ -160,7 +160,8 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
         ### the first sift. Want values away from the edges of the mask and not in the masked pixels (i.e, where edt > 0) and where the gradient in edt is small.
         ### For example, consider an ideal arc that doesn't change width along its length. Along the centre of the arc, parrallel to the arc axis
         ### the edt is constant, so the edt gradient is zero. Perpendicular to the arc axis, the edt gradient is also zero, as the perpendicular cut of edt
-        ### looks like [..E-2,E-1,E,E-1,E-2...] where E is the edt value at the centre of the arc, and the gradient is calculated as ((E-1) - (E-1))/2 = 0
+        ### looks like [..E-2,E-1,E,E-1,E-2...] where E is the edt value at the centre of the arc, and the gradient is calculated as ((E-1) - (E-1))/2 = 0.
+        ### Alternatively, for even pixel widths, [..E-2,E-1,E,E,E-1,E-2...] and the gradient perpendicular to the arc is (E - (E-1))/2 = 0.5.
 
         ### it turns out mod_egrad <=0.5 is the threshold required to detect the smallest structures that are not parallel to either image axis
         mask = np.where((((edt>0)&(mod_egrad <= 0.5))), edt, 0)
