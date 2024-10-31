@@ -1,6 +1,6 @@
 Aurora scale sizes
 
-The main function is aurora_power.
+The main function is aurora_power. It works best on discrete and bright emissions.
 
 To get the metres per pixel: if the field of view (FOV) is $\theta$ radians, and you have NxN pixels in the FOV:
 
@@ -9,6 +9,8 @@ $mpp \approx h\times 1000 \times tan(\frac{\theta}{N})$,
 where h is the emission height in km (e.g. 100 km).
 
 Set mpp_base to something comparable to mpp, say rounded to the nearest 10 or 5.
+
+Tweak the other optional parameters to adjust the de-noising. Stricter de-noising makes it more likely you'll miss subtle structures.
 
 The plotting function gives a quick overview of the output.
 
