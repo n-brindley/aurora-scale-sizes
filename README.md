@@ -1,8 +1,14 @@
 Aurora scale sizes:
 
-A heuristic approach using a combination of existing image processing methods to get scale-dependent power in aurora. Has certain advantages over FFT and wavelet methods, but has no mathematical basis. This method has adjustable parameters to increase/decrease robustness to noise at the expense of decreased/increased detection of subtle structures. 
+A heuristic approach using a combination of gaussian mixture models and existing image processing techniques to get scale-dependent power in aurora. This method has certain advantages over FFT and wavelet methods, but has no mathematical basis. It has adjustable parameters to increase/decrease robustness to noise at the expense of decreased/increased detection of subtle structures. We recommend sigma clipping images to remove stars prior to using the algorithm, but the de-noising has a good chance of removing them.
 
-The main function is aurora_power. It works best on discrete and bright emissions.
+Advantages:
+
+No need to assume underlying signal (cf. needing to choose mother wavelet in wavelet transform).
+Adjustable robustness against noise.
+Avoids spurious power at large scales when the structures are actually narrow (cf. FFT methods, where, for example, the FFT of a gaussian pulse gives another gaussian in wavenumber space, where the width in the wavenumber domain is inversely related to the width in the spatial domain; the highest power is still at large scales, even though the structure is narrow).
+
+The main function is aurora_power. It works best on discrete and bright emissions, but results will be reasonable in other cases.
 
 To get the metres per pixel: if the field of view (FOV) is $\theta$ radians, and you have NxN pixels in the FOV:
 
