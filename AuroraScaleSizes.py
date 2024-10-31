@@ -415,8 +415,10 @@ def aurora_power(image0,mpp,base_mpp = 40,check_scale = 6*np.sqrt(2),require_nei
                 GAUSSES.append(gau)
                 
             THRESHES = []
+            ### determining the thresholds from the GMM means
             for ii in range(len(GAUSSES)-1):
                 try:
+                    ### first try getting the intersection of adjacent gaussians
                     f = GAUSSES[ii]
                     g = GAUSSES[ii+1]
                     idx = np.argwhere(np.diff(np.sign(f - g))).flatten()
@@ -425,6 +427,7 @@ def aurora_power(image0,mpp,base_mpp = 40,check_scale = 6*np.sqrt(2),require_nei
                     thr = gauss_x[idx[idx2]]
                     THRESHES.append(thr)
                 except:
+                    ### if that doesn't work, use the brightness at the lower bound of the full-width half max
                     THRESHES.append(best_means[ii]-np.sqrt(best_covs[ii])*2.355/2)
             THRESHES.append(np.max(im0)+1)
             THRESHES = np.array(THRESHES)
