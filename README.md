@@ -30,7 +30,7 @@ $mpp \approx h\times 1000 \times tan(\frac{\theta}{N})$,
 
 where h is the emission height in km (e.g. 100 km).
 
-– Set mpp_base to something comparable to mpp, say rounded to the nearest 10 or 5.
+– Set mpp_base to something comparable to mpp, say rounded down to the nearest 10 or 5.
 
 – The plotting function gives a quick overview of the output.
 
