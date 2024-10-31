@@ -94,7 +94,7 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
     ALL_IX: list, pixel x coordinates of accepted points
     ALL_IY: list, pixel y coordinates of accepted points
     STACK: 3d float array, dimensions (rows,columns,scale sizes). When a scale size is found, a disk of radius scale size/2 and centred on the accepted point
-            with coordinates (rows,columns) is filled in. Which level of STACK is filled in is determined by scale size. This keeps the power at each scale separate for later analysis
+            with coordinates (rows,columns) is filled in with the relevant threhsold brightness. Which level of STACK is filled in is determined by scale size. This keeps the power at each scale separate for later analysis
             and also prevents counting pixels more than once for overlapping circles.
     means: float array, the brightness values assigned to each pair of thesholds
     NCL: int, number of gaussians in the GMM
