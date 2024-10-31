@@ -5,6 +5,7 @@ from skimage.morphology import binary_closing,remove_small_holes,remove_small_ob
 from sklearn.mixture import GaussianMixture as GMM
 from scipy.ndimage import distance_transform_edt
 from skimage.draw import disk
+from matplotlib import pyplot as plt
 
 def gaussian(x,A,mu,sigma):
     """
@@ -385,7 +386,7 @@ def aurora_power(image0,mpp,base_mpp = 40,check_scale = 6*np.sqrt(2),require_nei
                     cov = covs0[:,0,0]
                     low_cov = cov[cov<250000]
                     
-                    
+                    ### this is a modified AIC; we penalise low weight gaussians and low covariance gaussians as they are probably over-fitting
                     AIC = gmm.aic(X)+ (2*(NCL[ii]*3)**3.75 + 2*(3*NCL[ii]))/(np.max([np.std(im0)/(np.max([len(under_weight)+len(low_cov),1])),3*NCL[ii]+2]) - 3*NCL[ii] - 1)
                     
                     aics.append(AIC)
