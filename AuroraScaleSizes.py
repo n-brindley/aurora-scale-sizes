@@ -24,6 +24,7 @@ def assess(stack_sum,recon,means):
     
     ### we set the lowest brightness value in the reconstruction to zero as these are likely to be noise or very large scale background, which we aren't really interesting in.
     recon = np.where(recon == np.min(means),0,recon)
+    dim_y,dim_x = np.shape(recon)
     uni = np.unique(recon)
     numbers_rc = np.zeros_like(recon)
     numbers_ss = np.zeros_like(stack_sum)
@@ -39,10 +40,10 @@ def assess(stack_sum,recon,means):
     stack_sum = np.where(stack_sum == np.min(means),0,stack_sum)
 
     ### exclude the edges as they are more likely to be missed and artificially inflate the label residuals
-    ss = stack_sum[25:231,25:231]
-    ssn = numbers_ss[25:231,25:231]
-    rc = recon[25:231,25:231]
-    rcn = numbers_rc[25:231,25:231]
+    ss = stack_sum[25:dim_y-25,25:dim_x-25]
+    ssn = numbers_ss[25:dim_y-25,25:dim_x-25]
+    rc = recon[25:dim_y-25,25:dim_x-25]
+    rcn = numbers_rc[25:dim_y-25,25:dim_x-25]
 
 
     err = np.sum(abs(rcn-ssn)) ### sum of absolute label residuals
