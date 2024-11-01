@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: aurora-scale-sizes
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Nicholas
+    family-names: Brindley
+    affiliation: University of Southampton
+    orcid: 'https://orcid.org/0009-0008-0743-8220'
+repository-code: 'https://github.com/n-brindley/aurora-scale-sizes.git'
+abstract: >-
+  A heuristic approach to determining scale-dependent power
+  in auroral images. It uses a combination of existing image
+  processing methods and gaussian mixture models.
+keywords:
+  - Aurora
+license: MIT
+commit: 40297a98817cf1834f2d37d92e76f9190b807904
+date-released: '2024-10-31'
