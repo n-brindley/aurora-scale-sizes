@@ -354,7 +354,11 @@ def aurora_power(image0,mpp,base_mpp = 40,check_scale = 6*np.sqrt(2),require_nei
     prev_denoise: int, the denoiser parameter determined for the previous image in the sequence. If provided, reduces the parameter space search time for this image.
     -------------------------
     '''
-    BINS = np.linspace(base_mpp,256*base_mpp,257) ### radius bins
+    imdims = np.shape(image0)
+    im_dim_y = imdims[0]
+    im_dim_x = imdims[1]
+    maxdim = np.max([im_dim_y,im_dim_x])
+    BINS = np.linspace(0,maxdim*base_mpp,maxdim+1) ### radius bins
     CENTRES = (BINS[1:]+BINS[:-1])*0.5*2  ### the diameter bin centres
     if np.max(image0)-np.min(image0)>6000:
         if prev_denoise:  ### assume the noise level doesn't change too much between frames, so only search parameter space in a small range either side of the previous value. Takes less time.
