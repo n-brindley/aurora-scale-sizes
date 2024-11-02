@@ -20,7 +20,7 @@ Disadvantages:
 
 Usage:
 
-– We recommend sigma clipping images to remove stars prior to using the algorithm, but the de-noising has a good chance of removing them.
+– We recommend sigma clipping images to remove stars prior to using the algorithm, but the de-noising has a good chance of removing them. The algorithm currently doesn't handle NaNs, so replace clipped pixels with a local mean and add some gaussian noise so it blends in.
 
 –The main function is aurora_power. It works best on discrete and bright emissions, but results will be reasonable in other cases. Images are meant to be in Rayleighs; behaviour has not been tested on raw counts.
 
