@@ -129,7 +129,9 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
     maxdim = np.max([im_dim_y,im_dim_x])
     BINS = np.linspace(0,maxdim*base_mpp,maxdim+1)
     
-    for ii in range(1,len(TEMP)-1):  ### loop through the thresholds in increasing order of brightness, exclude the first and last.
+    for ii in range(1,len(TEMP)-1):  ### loop through the thresholds in increasing order of brightness,
+        ### except the first as this will probably introduce noise.
+        ### exclude the last threshold as everything will be zero.
         subA = np.where(pred<TEMP[ii],0,1)  ### mask pixels below this threshold
         subB = remove_small_holes(subA)  ### tries to remove noise
         subC = remove_small_objects(subB) ### tries to remove noise
