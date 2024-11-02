@@ -284,7 +284,7 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
             REAL_DISTS.append(diam*mpp)
             id0 = np.digitize([diam*mpp],BINS*2)[0]
             
-            id0-=1
+            id0-=1 ### digitize returns 0 and len(BINS) for data that is out of bounds of the bins, so for the zeroth bin it will return 1; therefore subtract 1
             id0 = np.max([id0,0])
             if id0 not in [-1,maxdim]:
                 ### disk coordinate
