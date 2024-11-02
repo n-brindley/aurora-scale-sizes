@@ -240,25 +240,36 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
         DISTS = edt[idx]
         
         
-            
+        REAL_DISTS = []
         ### this bit fills in STACK 
         for kk in range(len(INDEX_X)):
             
             r = DISTS[kk]
-            id0 = np.digitize([r*2*mpp],BINS*2)[0]
+            #3x3 patch centred on the pixel. Checking to see if there is another EDT value the same in the patch. If so, the structure is an even
+            # number of pixels wide, else it is an odd number
+            check_patch = mask3[np.max([INDEX_Y[kk]-1,0]):np.min([INDEX_Y[kk]+2,im_dim_y]),np.max([INDEX_X[kk]-1,0]):np.min([INDEX_X[kk]+2,im_dim_x])]
+            this_r_count = len(np.where(check_patch == r)[0])
+            if this_r_count>1:
+                # the structure is an even number of pixels wide
+                diam = r*2
+            else:
+                # the structure is odd
+                diam = r*2 - 1
+            REAL_DISTS.append(diam*mpp)
+            id0 = np.digitize([diam*mpp],BINS*2)[0]
             
             id0-=1
             id0 = np.max([id0,0])
             if id0 not in [-1,256]:
                 ### disk coordinate
-                rr,cc = disk((INDEX_Y[kk],INDEX_X[kk]),r,shape = np.shape(image))
+                rr,cc = disk((INDEX_Y[kk],INDEX_X[kk]),diam/2,shape = np.shape(image))
     
                 ### id0 is the index of the scale size in the stack
                 ### rr,cc are the coordinates of a disk
                 STACK[rr,cc,id0] = means[ii]
                     
         ### these are the scale sizes (diameters), now in metres
-        ALL_DISTS+=list(DISTS*mpp*2)
+        ALL_DISTS+=REAL_DISTS
 
         ### these are the brightness values
         ALL_POWS+=list(pred[idx])
