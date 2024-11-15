@@ -533,7 +533,7 @@ def aurora_power(image0,mpp,base_mpp = 40,check_scale = 6*np.sqrt(2),require_nei
 
 
 def plotting(image,im0,recon,CENTRES,STACK,INT_BRIGHT_SCALE,STACK_FRAC,mpp,base_mpp,gauss_x,GAUSSES,TOTAL_GAUSS,TEMP):
-                
+    ### a good level of 'significance' is STACK_FRAC*256*256/FOUND_PIX >= 0.01. This is highly unlikely to be noise
     fig = plt.figure(figsize = (13,7))
     dims = np.shape(image)
     ax =fig.add_subplot(241)
@@ -559,7 +559,7 @@ def plotting(image,im0,recon,CENTRES,STACK,INT_BRIGHT_SCALE,STACK_FRAC,mpp,base_
     ax6.plot(CENTRES,STACK_FRAC)
     ax6.set_xscale('log')
     ax6.set_ylabel('Fractional Coverage')
-    ax6.plot(CENTRES[CENTRES<=750],(CENTRES[CENTRES<=750]**2)*4/(256*256*40*40),ls = 'dotted',color = 'k')
+    #ax6.plot(CENTRES[CENTRES<=750],(CENTRES[CENTRES<=750]**2)*4/(256*256*40*40),ls = 'dotted',color = 'k')
     ax6.set_xlabel('Scale')
     ax6.set_yscale('log')
     ax7.hist(np.ravel(image),bins = gauss_x,alpha = 0.5,density = False)
