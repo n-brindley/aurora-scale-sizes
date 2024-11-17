@@ -125,9 +125,10 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,check_scale = 6*np.sqrt(
     ALL_IY = [] ### initialise list to hold the y pixel coordinates of each found point
     
     
-    STACK = np.zeros((im_dim_y,im_dim_x,256)) ### dims: im_dim_y,im_dim_x,scale size
+    
     maxdim = np.max([im_dim_y,im_dim_x])
     BINS = np.linspace(0,maxdim*base_mpp,maxdim+1)
+    STACK = np.zeros((im_dim_y,im_dim_x,len(BINS)-1)) ### dims: im_dim_y,im_dim_x,scale size
     
     for ii in range(1,len(TEMP)-1):  ### loop through the thresholds in increasing order of brightness, except the first as this will probably introduce noise.
         ### exclude the last threshold as everything will be zero.
