@@ -322,7 +322,7 @@ def get_sizes(image,pred,mpp,NCL,threshes,base_mpp = 40,PAD = False, check_scale
 
 
 def aurora_power(image0,mpp,base_mpp = 40,PAD = False,check_scale = 6*np.sqrt(2),require_neighbours = 3,require_local_levels = 3,size_delta = 1,\
-                 neighbourhood1 = 5,neighbourhood2 = 3,flat_cut = 2500,thresh_cut = 2500,original_maxmin_cut = 6000,prev_denoise = None,denoise_floor = 1000):
+                 neighbourhood1 = 5,neighbourhood2 = 3,flat_cut = 2500,thresh_cut = 2500,original_maxmin_cut = 6000,prev_denoise = None,denoise_floor = 1000, DENOISE = True):
     '''
     -------------------------
     PARAMETERS:
@@ -350,6 +350,12 @@ def aurora_power(image0,mpp,base_mpp = 40,PAD = False,check_scale = 6*np.sqrt(2)
     thresh_cut: int; thresholds below this will be excluded. Should reduce low brightness noise.
 
     original_maxmin_cut: int; if the original noisy image has a brightness range less than this then it will be skipped; i.e., there is not enough contrast.
+
+    prev_denoise: float; the previously found denoise parameter – reduces the time to find the current denoise parameter by narrowing down the search range.
+
+    denoise_floor: float; the smallest allowed denoise parameter – forces a certain amount of denoising.
+
+    DENOISE: bool; if False there is no denoising (this is much faster, but only suitable for low noise images).
     -------------------------
     RETURNS:
     Note: INT_BRIGHT_SCALE, STACK_FRAC, and CENTRES are probably the most useful for assessing scale-dependent power.
@@ -403,23 +409,27 @@ def aurora_power(image0,mpp,base_mpp = 40,PAD = False,check_scale = 6*np.sqrt(2)
     maxdim = np.max([im_dim_y,im_dim_x])
     BINS = np.linspace(0,maxdim*base_mpp,maxdim+1) ### radius bins
     CENTRES = (BINS[1:]+BINS[:-1])*0.5*2  ### the diameter bin centres
+    
     if np.max(image0)-np.min(image0)>original_maxmin_cut:
-        if prev_denoise:  ### assume the noise level doesn't change too much between frames, so only search parameter space in a small range either side of the previous value. Takes less time.
-            parameters = {'weight':np.arange(np.max([denoise_floor/2,prev_denoise-1000]),prev_denoise+1000+250,250)}
-            denoising_function = calibrate_denoiser(image0, denoise_tv_chambolle,denoise_parameters=parameters,stride = 4)
-            denoising_function.keywords['denoiser_kwargs']['weight']=np.max([denoise_floor,denoising_function.keywords['denoiser_kwargs']['weight']-250])
-            prev_denoise = denoising_function.keywords['denoiser_kwargs']['weight']
+        if DENOISE == True:
+            if prev_denoise:  ### assume the noise level doesn't change too much between frames, so only search parameter space in a small range either side of the previous value. Takes less time.
+                parameters = {'weight':np.arange(np.max([denoise_floor/2,prev_denoise-1000]),prev_denoise+1000+250,250)}
+                denoising_function = calibrate_denoiser(image0, denoise_tv_chambolle,denoise_parameters=parameters,stride = 4)
+                denoising_function.keywords['denoiser_kwargs']['weight']=np.max([denoise_floor,denoising_function.keywords['denoiser_kwargs']['weight']-250])
+                prev_denoise = denoising_function.keywords['denoiser_kwargs']['weight']
 
 
-        else:    ### get the first denoise parameter; search a broad parameter space. Takes a while.
-            parameters = {'weight':np.arange(denoise_floor,9500,250)}
-            denoising_function = calibrate_denoiser(image0, denoise_tv_chambolle,denoise_parameters=parameters,stride = 4)
-            denoising_function.keywords['denoiser_kwargs']['weight']=np.max([denoise_floor,denoising_function.keywords['denoiser_kwargs']['weight']-250])
-            prev_denoise = denoising_function.keywords['denoiser_kwargs']['weight']
+            else:    ### get the first denoise parameter; search a broad parameter space. Takes a while.
+                parameters = {'weight':np.arange(denoise_floor,9500,250)}
+                denoising_function = calibrate_denoiser(image0, denoise_tv_chambolle,denoise_parameters=parameters,stride = 4)
+                denoising_function.keywords['denoiser_kwargs']['weight']=np.max([denoise_floor,denoising_function.keywords['denoiser_kwargs']['weight']-250])
+                prev_denoise = denoising_function.keywords['denoiser_kwargs']['weight']
 
-        print('denoise parameter: ',denoising_function.keywords['denoiser_kwargs']['weight'])
-        ## the denoise image
-        im0 = denoising_function(image0)
+            print('denoise parameter: ',denoising_function.keywords['denoiser_kwargs']['weight'])
+            ## the denoise image
+            im0 = denoising_function(image0)
+        else:
+            im0 = np.copy(image0)
         
         
         ### only proceed if the image isn't too flat ###
